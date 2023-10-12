@@ -5,11 +5,12 @@ import {PrismaClient, Task} from "@prisma/client"
 import bcrypt from 'bcrypt'
 const SECRET = "secret"
 import jwt from "jsonwebtoken"
-import Server from "socket.io"
-
+import { Server } from 'socket.io'
 
 const app = express();
-const io = new Server(app)
+import * as http from "http";
+const server = http.createServer(app);
+const io = new Server(server)
 
 const port = process.env.PORT || 3000;
 
