@@ -19,6 +19,11 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 const prisma = new PrismaClient()
 
+io.on('connection', () => {
+    console.log('a user connected');
+});
+
+
 app.get("/", async (req, res) => {
     const users = await prisma.user.findMany()
     res.send(users)
@@ -51,6 +56,7 @@ app.post("/new", async (req, res) => {
     const task = await prisma.task.create({
         data: myTask
     })
+    io.emit("Task:create", task)
     res.send(task)
 })
 
@@ -62,6 +68,7 @@ app.put("/:id", async (req, res) => {
         },
         data: myTask
     })
+    io.emit("Task:edit", task)
     res.send(task)
 })
 
@@ -73,6 +80,7 @@ app.delete("/:id", async (req, res) => {
             id: parseInt(req.params.id)
         }
     })
+    io.emit("Task:delete", task)
     res.send(task)
 })
 
