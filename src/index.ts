@@ -12,7 +12,7 @@ import http from "http";
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: '*',
   },
 });
 
@@ -96,7 +96,7 @@ app.post("/new", async (req, res) => {
     const task = await prisma.task.create({
         data: myTask
     })
-    io.emit("Task:create", task)
+    io.emit("task:create", task)
     res.send(task)
 })
 
@@ -108,7 +108,7 @@ app.put("/:id", async (req, res) => {
         },
         data: myTask
     })
-    io.emit("Task:edit", task)
+    io.emit("task:edit", task)
     res.send(task)
 })
 
@@ -118,12 +118,12 @@ app.delete("/:id", async (req, res) => {
             id: parseInt(req.params.id)
         }
     })
-    io.emit("Task:delete", task)
+    io.emit("task:delete", task)
     res.send(task)
 })
 
 
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
